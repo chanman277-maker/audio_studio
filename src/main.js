@@ -2,6 +2,7 @@ import { PiperPlus } from "piper-plus";
 import * as ort from "onnxruntime-web";
 import lamejs from "lamejs";
 
+ort.env.wasm.wasmPaths = new URL("ort/", location.href).href;
 const $ = (id) => document.getElementById(id);
 const textEl = $("text"), makeBtn = $("make"), statusEl = $("status"), bar = $("bar"), listEl = $("list");
 let tts = null, db = null, entries = [], audioURLs = new Set(), busy = false;

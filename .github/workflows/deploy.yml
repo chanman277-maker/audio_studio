@@ -24,6 +24,7 @@ jobs:
           node-version: 24
       - run: npm install
       - run: npm run build
+      - run: mkdir -p dist/ort && cp node_modules/onnxruntime-web/dist/ort-wasm-simd-threaded* dist/ort/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
