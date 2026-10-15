@@ -78,6 +78,7 @@ async function initialize() {
     status("音声エンジンを読み込んでいます…", 0.04);
     tts = await PiperPlus.initialize({
       model: "ayousanz/piper-plus-tsukuyomi-chan",
+      wasmG2pUrl: new URL("piper/rust-wasm/piper_plus_wasm.js", location.href).href,
       ort,
       onProgress: ({ stage, progress, message }) => status(`準備中：${message || stage || "モデル読み込み"} (${Math.round((progress || 0) * 100)}%)`, progress || 0)
     });

@@ -14,7 +14,7 @@
 <section class="hero"><h2>文章を、音声ファイルに。</h2><p>日本語の音声をブラウザ内で生成。作った音声は一覧に保存して再生・MP3ダウンロードできます。<br>初回だけ音声モデルをダウンロードします。</p></section>
 <section class="card"><div class="head"><h3>✦ 音声を作成</h3><span class="muted" id="count">0文字</span></div>
 <label for="text">読み上げたい文章</label><textarea id="text" maxlength="3000" placeholder="例：こんにちは。今日は音声を作成しています。" required></textarea>
-<div class="grid"><div><label for="speed">読み上げ速度</label><select id="speed"><option value="0.8">ゆっくり</option><option value="1" selected>標準</option><option value="1.15">少し速い</option><option value="1.3">速い</option></select></div><div><label>音声モデル</label><select disabled><option>つくよみちゃん（日本語）</option></select></div></div>
+<div class="grid"><div><label for="speed">読み上げ速度</label><select id="speed"><option value="0.8">ゆっくり</option><option value="1" selected>標準</option><option value="1.15">少し速い</option><option value="1.3">速い</option></select></div><div><label>音声モデル（現在は1種類のみ）</label><select disabled><option>つくよみちゃん（日本語）</option></select></div></div>
 <div class="btns"><button class="btn primary" id="make" disabled>♫ 音声を生成して保存</button><button class="btn soft" id="preview" type="button">▶ 端末の標準音声で試聴</button><button class="btn plain" id="stop" type="button">■ 停止</button></div>
 <div class="status" id="status" aria-live="polite">音声エンジンの準備を始めています…</div><div class="progress"><div class="bar" id="bar"></div></div>
 <div class="notice"><b>初回のみ：</b>音声合成エンジンと日本語音声モデルをインターネットからダウンロードします。モデルはブラウザにキャッシュされ、2回目以降は再ダウンロードを減らせます。初回のダウンロードは数十MB以上になる場合があります。</div>
