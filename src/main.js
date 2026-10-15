@@ -1,6 +1,6 @@
 import { PiperPlus } from "piper-plus";
 import * as ort from "onnxruntime-web";
-import lamejs from "lamejs";
+import { Mp3Encoder } from "@breezystack/lamejs";
 
 ort.env.wasm.wasmPaths = new URL("ort/", location.href).href;
 const $ = (id) => document.getElementById(id);
@@ -46,7 +46,7 @@ function del(id) {
 }
 function mp3Blob(samples, sampleRate) {
   // Piper's output samples are Float32 mono. Encode them locally as MP3.
-  const encoder = new lamejs.Mp3Encoder(1, sampleRate, 128);
+  const encoder = new Mp3Encoder(1, sampleRate, 128);
   const chunkSize = 1152, chunks = [];
   for (let i = 0; i < samples.length; i += chunkSize) {
     const part = samples.subarray(i, Math.min(i + chunkSize, samples.length));

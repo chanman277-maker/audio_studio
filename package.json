@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "lamejs": "^1.2.1",
+    "@breezystack/lamejs": "^1.2.7",
     "onnxruntime-web": "^1.30.0",
     "piper-plus": "^0.8.0"
   },
