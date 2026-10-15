@@ -144,7 +144,7 @@ $("restore").onchange = async ev => {
     if (missing.length) status(`バックアップのテキスト ${missing.length}件を読み込みました。MP3はバックアップに含まれないため、音声を再生成してください。`);
     for (const e of missing) await put({id:e.id || crypto.randomUUID(), title:e.title || "復元した音声", text:e.text, createdAt:e.createdAt || new Date().toISOString(), blob:new Blob([], {type:"audio/mpeg"}), restoredWithoutAudio:true});
     entries = await getAll(); render();
-    if (!missing.length) status("追加する新しい項目はありま���んでした。");
+    if (!missing.length) status("追加する新しい項目はありませんでした。");
   } catch { status("有効なバックアップJSONを選択してください。"); }
   ev.target.value = "";
 };
