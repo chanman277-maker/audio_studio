@@ -25,6 +25,10 @@ jobs:
       - run: npm install
       - run: npm run build
       - run: mkdir -p dist/ort && cp node_modules/onnxruntime-web/dist/ort-wasm-simd-threaded* dist/ort/
+      - name: Cap wasm memory reservation (iOS Safari cannot reserve 4GB)
+        run: |
+          sed -i "s/maximum:65536/maximum:16384/g" dist/ort/*.mjs
+          grep -l "maximum:16384" dist/ort/ort-wasm-simd-threaded.jsep.mjs
       - run: mkdir -p dist/piper && cp -r node_modules/piper-plus/dist/rust-wasm dist/piper/rust-wasm
       - uses: actions/upload-pages-artifact@v3
         with:
