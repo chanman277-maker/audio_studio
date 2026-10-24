@@ -15,9 +15,9 @@
 <section class="card"><div class="head"><h3>✦ 音声を作成</h3><span class="muted" id="count">0文字</span></div>
 <label for="text">読み上げたい文章</label><textarea id="text" maxlength="5000" placeholder="例：こんにちは。今日は音声を作成しています。" required></textarea>
 <div class="grid"><div><label for="speed">読み上げ速度</label><select id="speed"><option value="0.8">ゆっくり</option><option value="1" selected>標準</option><option value="1.15">少し速い</option><option value="1.3">速い</option></select></div><div><label>音声モデル（現在は1種類のみ）</label><select disabled><option>つくよみちゃん（日本語）</option></select></div></div>
-<div class="btns"><button class="btn primary" id="make" disabled>♫ 音声を生成して保存</button><button class="btn soft" id="preview" type="button">▶ 端末の標準音声で試聴</button><button class="btn plain" id="stop" type="button">■ 停止</button></div>
+<div class="btns"><button class="btn primary" id="make" type="button">♫ 音声を生成して保存</button><button class="btn soft" id="preview" type="button">▶ 端末の標準音声で試聴</button><button class="btn plain" id="stop" type="button">■ 停止</button></div>
 <div class="status" id="status" aria-live="polite">音声エンジンの準備を始めています…</div><div class="progress"><div class="bar" id="bar"></div></div>
-<div class="notice"><b>初回のみ：</b>音声合成エンジンと日本語音声モデルをインターネットからダウンロードします。モデルはブラウザにキャッシュされ、2回目以降は再ダウンロードを減らせます。初回のダウンロードは数十MB以上になる場合があります。</div>
+<div class="notice"><b>初回のみ：</b>音声合成エンジンと日本語音声モデルをインターネットからダウンロードします。モデルはブラウザにキャッシュされ、2回目以降は再ダウンロードを減らせます。初回のダウンロードは約100MBになるため、スマホではWi-Fi接続をおすすめします。</div>
 </section>
 <section class="card"><div class="head"><h3>♫ 作成した音声</h3><span class="muted" id="items-count">0件</span></div><div class="list" id="list"><div class="empty">まだ音声がありません。</div></div><div class="btns"><button class="btn plain mini" id="backup">一覧をバックアップ</button><label class="btn plain mini" for="restore" style="margin:0;cursor:pointer">バックアップを読み込む</label><input id="restore" type="file" accept=".json,application/json" hidden></div><p class="hint">音声ファイルはこの端末のブラウザ内に保存されます。別の端末へ移すときは、各音声のMP3をダウンロードして共有してください。自動クラウド同期はこの無料版には含まれません。</p></section>
 <div class="footer">音声生成は端末内で処理します。モデルの取得時には通信が発生します。音声モデルの利用条件はREADMEをご確認ください。</div>

@@ -73,7 +73,12 @@ function render() {
     return `<article class="item"><h4>${esc(e.title)}</h4><p>${esc(e.text.length > 240 ? e.text.slice(0,240)+"…" : e.text)}</p><div class="meta">${esc(fmtDate(e.createdAt))} · ${e.text.length}文字 · ${e.restoredWithoutAudio ? "音声未生成" : "MP3"}</div>${url ? `<audio controls preload="none" src="${url}"></audio>` : `<p class="meta">バックアップから復元したテキストです。MP3を作り直してください。</p>`}<div class="btns">${e.restoredWithoutAudio ? `<button class="btn soft mini" data-recreate="${esc(e.id)}">文章を入力欄に戻す</button>` : `<button class="btn soft mini" data-download="${esc(e.id)}">MP3を保存</button>`}<button class="btn plain mini" data-delete="${esc(e.id)}">削除</button></div></article>`;
   }).join("");
 }
+let initState = "idle"; // idle | loading | ready | failed
+// ボタンを押した結果は画面外に出やすい(特にスマホ)ので、メッセージ位置までスクロールする
+function say(message) { status(message); statusEl.scrollIntoView({ block: "center", behavior: "smooth" }); }
 async function initialize() {
+  if (initState === "loading") return;
+  initState = "loading";
   try {
     status("音声エンジンを読み込んでいます…", 0.04);
     tts = await PiperPlus.initialize({
@@ -82,27 +87,38 @@ async function initialize() {
       ort,
       onProgress: ({ stage, progress, message }) => status(`準備中：${message || stage || "モデル読み込み"} (${Math.round((progress || 0) * 100)}%)`, progress || 0)
     });
-    makeBtn.disabled = false;
+    initState = "ready";
     status("準備完了！文章を入力して音声を生成できます。", 1);
   } catch (err) {
-    status("音声エンジンの準備に失敗しました。通信環境を確認し、ページを再読み込みしてください。詳細：" + (err?.message || err));
+    initState = "failed";
+    status("音声エンジンの準備に失敗しました。「音声を生成して保存」を押すともう一度試します。スマホでは通信が不安定だったりメモリが足りなかったりすると失敗することがあります。詳細：" + (err?.message || err));
   }
 }
 textEl.addEventListener("input", () => $("count").textContent = `${textEl.value.length}文字`);
+function jaVoice() { return ("speechSynthesis" in window ? speechSynthesis.getVoices() : []).find(v => /^ja/i.test(v.lang)) || null; }
 $("preview").onclick = () => {
   const text = textEl.value.trim();
-  if (!text) { status("先に文章を入力してください。"); return; }
-  if (!("speechSynthesis" in window)) { status("このブラウザは標準音声の試聴に対応していません。"); return; }
+  if (!text) { say("先に上の入力欄に文章を入力してください。"); return; }
+  if (!("speechSynthesis" in window)) { say("このブラウザは標準音声の試聴に対応していません。"); return; }
   speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text); u.lang = "ja-JP"; u.rate = Number($("speed").value) || 1;
+  const v = jaVoice(); if (v) u.voice = v;
   u.onstart = () => status("端末の標準音声で試聴中…");
   u.onend = () => status("試聴が終わりました。");
+  u.onerror = ev => { if (ev.error !== "canceled" && ev.error !== "interrupted") say("試聴できませんでした（" + (ev.error || "不明なエラー") + "）。端末の設定で日本語の音声データが入っているか、マナーモードや音量を確認してください。"); };
+  say("試聴を開始します…");
   speechSynthesis.speak(u);
 };
 $("stop").onclick = () => { if ("speechSynthesis" in window) speechSynthesis.cancel(); status("標準音声の試聴を停止しました。"); };
 makeBtn.onclick = async () => {
   const text = textEl.value.trim();
-  if (!text || !tts || busy) return;
+  if (busy) return;
+  if (!text) { say("先に上の入力欄に文章を入力してください。"); return; }
+  if (!tts) {
+    if (initState === "loading") say("音声エンジンを準備中です。初回は約100MBのダウンロードがあるため、完了するまでお待ちください。");
+    else { say("音声エンジンを読み込み直します…"); initialize(); }
+    return;
+  }
   busy = true; makeBtn.disabled = true;
   try {
     status("日本語音声を生成中…端末によっては少し時間がかかります。", 0.2);
@@ -117,7 +133,7 @@ makeBtn.onclick = async () => {
     textEl.value = ""; $("count").textContent = "0文字";
   } catch (err) {
     status("音声生成に失敗しました：" + (err?.message || err));
-  } finally { busy = false; makeBtn.disabled = !tts; }
+  } finally { busy = false; makeBtn.disabled = false; }
 };
 listEl.addEventListener("click", async ev => {
   const btn = ev.target.closest("button"); if (!btn) return;
